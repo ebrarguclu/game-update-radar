@@ -1,0 +1,5 @@
+google-play-scraper
+pandas
+pyarrow
+ipykernel
+matplotlib

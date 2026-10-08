@@ -1,0 +1,7 @@
+game,reviews,duplicate_ids,empty_text_pct,first_day,last_day,days_with_zero_reviews,median_words,pct_with_version,pct_mentioning_any_topic
+royal_match,36741,0,0.0,2025-10-07,2026-10-06,0,3,87.3,16.6
+royal_kingdom,30578,0,0.0,2025-10-07,2026-10-06,0,4,84.0,22.1
+toon_blast,8510,0,0.0,2025-10-07,2026-10-06,0,5,85.5,23.4
+match_factory,8323,0,0.0,2025-10-07,2026-10-06,1,5,87.0,22.2
+pixel_flow,12005,0,0.0,2025-10-07,2026-10-06,0,12,82.6,48.2
+match_villains,6408,0,0.0,2025-10-08,2026-10-07,0,5,85.4,32.2
