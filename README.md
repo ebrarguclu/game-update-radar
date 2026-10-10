@@ -19,12 +19,34 @@ Most review dashboards group reviews by date. But many players don't update righ
 - **Royal Kingdom, April–May 2026:** ad complaints rose to ~26% of reviews in version 28796 (+8 percentage points), then fell by 15 points two releases later. It looks like an ad change that drew backlash and was reverted. *(Being verified by reading the reviews.)*
 - **Royal Match 37281 (July 2026):** two independent signals moved together: average rating fell 0.13 stars and ad mentions rose from 5.5% to 8.8%. The release notes don't mention ads, so the change may have shipped server-side.
 - **Pixel Flow 0.24.3 (May 2026):** bug complaints dropped from ~21% to 6% of reviews, a bug-fix release that clearly worked.
-- **Release cadence:** Royal Match moved from a 2-week to a ~4-week release cycle around spring 2026.
+- **Release cadence:** Royal Match shipped every 2 weeks until early 2026 and has shipped every 4 weeks since June 2026.
 - **Ads are the #1 complaint topic in every game**, but at very different levels (see below).
 
 ![Topics by game](figures/topics_by_game.png)
 
 ![Ad mentions per release](figures/ads_by_release.png)
+
+## Deep dive: Match Villains (Good Job Games)
+
+**Release rhythm.** Android builds first appear almost always on a **Monday, every 14 days**, and each App Store release note follows the same pattern: 100 new levels, a new item, and a new event or collection. A few builds fall outside that rhythm (Fri 26 Dec, Mon 26 Jan with a build number only +4 higher, Fri 15 May), which look like fixes. Android build 7078 first appears on 8 June, the same day the App Store lists version 1.55.0, so first-seen dates line up with real release dates here too.
+
+**Release-to-release ratings.** No change between consecutive releases survives the multiple-comparison correction. The largest movement is in spring: build 6969 (13 Apr) averaged 3.22 stars (−0.42 vs the previous build), the lowest month of the year was April (3.17 average, 44% five-star), and the next build 7011 (4 May) recovered +0.60 to 3.82 (q ≈ 0.07, borderline).
+
+**Review volume fell in two steps.** English Google Play reviews per month, indexed to October 2025 = 100:
+
+| | Oct–Jan | Feb–May | Jun–Sep |
+|---|---|---|---|
+| **Match Villains** | 93–105 | 47–59 | **14–21** |
+| Royal Match | 94–129 | 66–104 | 93–113 |
+| Royal Kingdom | 100–156 | 110–131 | 87–111 |
+| Match Factory | 100–120 | 52–73 | 56–74 |
+| Pixel Flow | 100–315 | 240–342 | 280–337 |
+
+The drop happened in two sudden steps (February and June), not gradually, and is far sharper than in the comparison games, so it is specific to Match Villains rather than to Google Play or the collection method.
+
+**But reviews became more positive.** Over the same period the five-star share rose from ~50% to 53–68% and the monthly average from ~3.5 to as high as 4.1 stars. If an in-app rating prompt had been removed, the short five-star reviews it generates would disappear and the five-star share would *fall*, so that explanation doesn't fit. The pattern is consistent with fewer new players arriving (leaving a smaller, more loyal base) or with a rating prompt shown less often but at happier moments. Release notes don't mention either, and review data alone can't separate them; download estimates would.
+
+**Practical consequence.** Since June every build gets fewer than 100 English reviews (median ~55), so per-release analysis for this game needs builds grouped into longer windows.
 
 ## A hypothesis that didn't hold up
 
@@ -48,13 +70,16 @@ Design decisions and their reasons are logged in [NOTES.md](NOTES.md).
 
 - Only players who write reviews are heard, and they are more negative than average (our samples average 3.5–4.4 stars vs 4.4–4.7 in the stores).
 - English reviews only; non-English markets aren't covered.
-- Content shipped server-side (events, level drops, ad settings) without an app update is invisible to version-level analysis.
+- Content shipped server-side (events, level drops, ad settings) without an app update is invisible to version-level analysis, and release notes describe player-facing content, not changes to ads, rating prompts or tuning.
+- Android and iOS number versions differently (build codes vs 1.55.0-style versions), so the two are matched by release date.
 - Results show association, not cause: players who update early may differ from those who don't.
 - Keyword topics miss paraphrases and can be fooled by negation. They cover ~20% of reviews (most reviews are 3–5 words, like "great game").
 
 ## Roadmap
 
 - [ ] Verify each finding by reading samples of the underlying reviews
+- [ ] Group consecutive builds into windows for low-volume periods (e.g., Match Villains since June 2026)
+- [ ] Add download estimates to separate "fewer players" from "fewer reviews per player"
 - [ ] Hand-label ~500 reviews; measure keyword precision/recall; compare with pretrained models
 - [ ] Classify release notes by update type (new mechanic, event, area) and link types to reactions
 - [ ] Daily GitHub Actions run that refreshes a report page for every new release
