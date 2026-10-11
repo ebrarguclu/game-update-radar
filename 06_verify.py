@@ -72,7 +72,8 @@ def write_sheet(wb, name: str, rows: pd.DataFrame, pattern: str | None):
     ws = wb.create_sheet(name)
     ws.append(HEADER)
     for i, r in enumerate(rows.itertuples(), start=1):
-        ws.append([i, r.group, r.game, r.version, r.score, r.at.date(),
+        version = None if pd.isna(r.version) else r.version   # reviews without a version -> empty cell (Excel can't store pandas' <NA>)
+        ws.append([i, r.group, r.game, version, r.score, r.at.date(),
                    matched_words(r.text, pattern), r.content, None, None])
     for c in ws[1]:
         c.font = Font(bold=True)
@@ -130,7 +131,7 @@ def score():
     wb = load_workbook(OUT_FILE)
     rows = []
     for ws in wb.worksheets:
-        df = pd.DataFrame(ws.iter_rows(min_row=2, values_only=True), columns=HEADER)
+        df = pd.DataFrame(ws.iter_rows(min_row=2, max_col=len(HEADER), values_only=True), columns=HEADER)
         for group, g in df.groupby("group"):
             lab = pd.to_numeric(g["correct"], errors="coerce").dropna()
             n = len(lab)
@@ -140,6 +141,14 @@ def score():
                          "precision_pct": round(100 * p, 1) if n else np.nan,
                          "low_pct": round(100 * max(p - 2 * se, 0), 1) if n else np.nan,
                          "high_pct": round(100 * min(p + 2 * se, 1), 1) if n else np.nan})
+    # Category codes written in "about" (ingame / misleading / noads / other): how are they split per group?
+    for ws in wb.worksheets:
+        df = pd.DataFrame(ws.iter_rows(min_row=2, max_col=len(HEADER), values_only=True), columns=HEADER)
+        codes = df["about"].astype(str).str.strip().str.lower()
+        if codes.isin(["ingame", "misleading", "noads"]).any():
+            print(f"\n{ws.title}: what the keyword matches are really about (% of labeled rows)")
+            print((pd.crosstab(df["group"], codes, normalize="index") * 100).round(0).to_string())
+
     out = pd.DataFrame(rows)
     SCORE_FILE.parent.mkdir(exist_ok=True)
     out.to_csv(SCORE_FILE, index=False)
