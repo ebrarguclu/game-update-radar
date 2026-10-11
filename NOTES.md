@@ -59,6 +59,23 @@ uninstalled before reviewing have no version. If true, this group is the voice o
 - Royal Match's `first_seen` for version 38911 (Sep 28) matches the App Store release date exactly, so `first_seen` is a valid release-date estimate for versions released inside the window.
 - Reviews are short (8–14 words on average), so many will mention no topic.
 
+## Match Villains findings (2026-10-09)
+- Release rhythm: every 14 days, almost always Monday (first-seen dates). Off-cycle builds (26 Dec, 26 Jan, 15 May) look like fixes.
+- No consecutive-release rating change survives BH correction. Spring dip: 6969 (13 Apr) 3.22 stars, 7011 (4 May) +0.60 (q ≈ 0.07).
+- Monthly English review volume: ~900–1,000 (Oct–Jan) → ~450–560 (Feb–May) → ~130–200 (Jun–Sep). Indexed: 100 → ~50 → ~14–21. Comparison games mostly flat; Match Factory −44%; Pixel Flow growing. So the drop is game-specific.
+- Two sudden steps (Feb, Jun) rather than gradual decline → points to a discrete event.
+- Test of "rating prompt removed": would lower the five-star share. Observed the opposite (~50% → 53–68%). Hypothesis rejected. Still open: fewer new players (loyal base remains), a prompt shown less often at happy moments, a market shift. Needs download data.
+- Release notes (App Store) only describe content (100 levels, new item, event); no hint of the cause.
+- Since June each build has <100 reviews → per-release analysis needs grouping.
+
+## Verification by reading: the "ads" topic mixes three things (2026-10-10)
+- Read and labeled 140 reviews matched by the "ads" keywords (RK 28796 before/after by me, RM 37281 and a random sample across games labeled with Claude's help; agreement on RK checked: 48/50).
+- Only ~25% are complaints about ads *inside* the game. ~55% say the game doesn't match its marketing ads ("nothing like the ad"), ~12% praise having no ads.
+- Royal Match: **zero** in-game ad complaints in 50 reviews. The README finding "RM 37281: ad mentions rose, maybe a server-side ad change" is therefore wrong; the rise is misleading-ad complaints. In-game ad complaints come mostly from Pixel Flow.
+- RK 28796: both rose, but misleading-ad complaints are the larger share (48% → 64% of matches). Alternative explanation: new players always install the latest version, so a marketing campaign shows up as a "release" effect.
+- Decision: split "ads" into `ads_ingame`, `ads_misleading`, `ads_none` (kept "ads" for comparison). Rules built on the RK+RM sheets, tested on the random 40: precision 86–100%, recall 60–100% (small sample).
+- Lesson: precision of the old "ads" list for "complaint about in-game ads" was ~25%. A keyword is not a meaning. Different meanings go to different teams (monetization vs user acquisition).
+
 ## Known limitations
 
 - Only players who write reviews are heard; they are more extreme than average.
@@ -83,4 +100,14 @@ uninstalled before reviewing have no version. If true, this group is the voice o
 - **Robustness check / stratification:** compare groups at the same level of a confounder (e.g., same star rating). It doesn't assume the alternative explanation is true; it protects you in case it is.
 - **Triangulation:** with no ground truth, look for several independent signals pointing the same way (stars, keywords, reading reviews).
 - **Read the data behind the number:** before presenting a finding, read a sample of the raw reviews behind it.
+- **Indexing:** scale each series to its own starting point (= 100) to compare trends of very different sizes.
+- **The shape of a change is evidence:** sudden steps suggest a discrete event; gradual decline suggests slow attrition.
+- **Test a hypothesis by its predicted signature:** decide what you'd see if it were true (e.g., five-star share falls), then check. Seeing the opposite rejects it.
+- **Semantic versioning:** X.Y.Z. Y up = planned feature release; Z up = patch/fix. Android build codes and iOS versions differ, so match platforms by date.
+- **Minimum detectable effect:** with n reviews, SE ≈ 1.5/√n; a difference needs ~2–3 SE to be detectable. Fewer reviews → only big changes are visible.
+- **Excel + Turkish locale:** opening a comma CSV can silently turn 4.15 into "15 April" and 12.145 into 12145. Export real .xlsx from Python instead.
+- **Precision vs recall:** precision = of what the rule flagged, how much is right; recall = of what is really there, how much the rule caught.
+- **Gold set:** a small hand-labeled set used as the answer key to evaluate any method (keywords, LLM, model). Labeled once, re-checked occasionally (monitoring).
+- **Build vs test set:** rules written while looking at some reviews look better on those same reviews; measure them on reviews not used to write them.
+- **Reading a traceback:** start at the last line (what went wrong), go up to the last line in your own file (where), then ask which value could cause it.
 - **Baseline first:** start with the simplest method that could work; it sets the bar a complex model must beat.
